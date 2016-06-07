@@ -77,8 +77,10 @@ class WikiPage(object):
 
         try:
             with open(self.wiki_path, 'wb') as wiki:
-                # get rid of any Windows-like ending
-                wiki.write(content.encode('utf-8').replace('\r\n', '\n'))
+                # get rid of any Windows-like or MacOS-like line breaks
+                normalized_content = content.replace('\r\n', '\n')
+                normalized_content = normalized_content.replace('\r', '\n')
+                wiki.write(normalized_content.encode('utf-8'))
         except IOError:
             # Something bad happened while writing so report failure.
             return False
